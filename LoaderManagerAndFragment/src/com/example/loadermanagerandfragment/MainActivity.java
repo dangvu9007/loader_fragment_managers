@@ -19,9 +19,11 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 	private LoaderCallbacks<String> loaderCallBackListener;
 	private Handler handler;
 	private ProgressBarShowable progressListener;
+	private boolean loaderWorks = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -34,6 +36,12 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 
 			@Override
 			public void onClick(View v) {
+				if (!loaderWorks) {
+					startLoader();
+				}
+			}
+
+			private void startLoader() {
 				if (loader == null) {
 					loader = getSupportLoaderManager().initLoader(LOADER_ID, null, loaderCallBackListener);
 					loader.forceLoad();
@@ -72,12 +80,13 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 		DataLoader dataLoader = new DataLoader(this);
 		dataLoader.setHandler(handler);
 		dataLoader.setProgressBarShowable(this);
-
+		loaderWorks = true;
 		return dataLoader;
 	}
 
 	@Override
 	public void onLoadFinished(Loader<String> loader, String arg1) {
+		loaderWorks = false;
 		removeFragment();
 	}
 
