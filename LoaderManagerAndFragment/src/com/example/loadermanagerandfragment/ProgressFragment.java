@@ -13,12 +13,8 @@ public class ProgressFragment extends DialogFragment {
 	private View view;
 	private TextView tv;
 	private DataLoader dataLoader;
-	private Handler handler;
 	private int percentage = 0;
 
-	public void setHandler(Handler handler) {
-		this.handler = handler;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

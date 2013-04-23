@@ -16,7 +16,7 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 	private ProgressFragment fragment;
 	boolean progressBarIsVisible = false;
 	private Loader<String> loader;
-	private LoaderCallbacks<String> listener;
+	private LoaderCallbacks<String> loaderCallBackListener;
 	private Handler handler;
 	private ProgressBarShowable progressListener;
 
@@ -25,7 +25,7 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		listener = this;
+		loaderCallBackListener = this;
 		progressListener = this;
 		fragment = new ProgressFragment();
 
@@ -35,10 +35,10 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 			@Override
 			public void onClick(View v) {
 				if (loader == null) {
-					loader = getSupportLoaderManager().initLoader(LOADER_ID, null, listener);
+					loader = getSupportLoaderManager().initLoader(LOADER_ID, null, loaderCallBackListener);
 					loader.forceLoad();
 				} else {
-					loader = getSupportLoaderManager().restartLoader(LOADER_ID, null, listener);
+					loader = getSupportLoaderManager().restartLoader(LOADER_ID, null, loaderCallBackListener);
 					loader.forceLoad();
 				}
 			}
@@ -64,14 +64,13 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.remove(fragment);
 		ft.commitAllowingStateLoss();
-
+		progressBarIsVisible = false;
 	}
 
 	@Override
 	public Loader<String> onCreateLoader(int id, Bundle params) {
 		DataLoader dataLoader = new DataLoader(this);
 		dataLoader.setHandler(handler);
-		fragment.setHandler(handler);
 		dataLoader.setProgressBarShowable(this);
 
 		return dataLoader;
@@ -84,7 +83,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 
 	@Override
 	public void onLoaderReset(Loader<String> arg0) {
-		addFragment();
 	}
 
 }
