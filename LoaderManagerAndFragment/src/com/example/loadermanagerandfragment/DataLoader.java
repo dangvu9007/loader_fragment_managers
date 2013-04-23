@@ -8,6 +8,7 @@ public class DataLoader extends AsyncTaskLoader<String> {
 	ProgressBarShowable progressBarShowable;
 	private int percentage = 0;
 	private Handler handler;
+	private boolean stop = false;
 
 	public void setProgressBarShowable(ProgressBarShowable progressBarShowable) {
 		this.progressBarShowable = progressBarShowable;
@@ -32,7 +33,9 @@ public class DataLoader extends AsyncTaskLoader<String> {
 			percentage = i;
 			handler.sendEmptyMessage(percentage);
 			pause();
-
+			if (stop){
+				return;
+			}
 		}
 	}
 
@@ -48,6 +51,12 @@ public class DataLoader extends AsyncTaskLoader<String> {
 	public String loadInBackground() {
 		process();
 		return null;
+	}
+
+	@Override
+	protected void onStopLoading() {
+		stop = true;
+		super.onStartLoading();
 	}
 
 }

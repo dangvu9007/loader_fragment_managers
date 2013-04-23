@@ -42,7 +42,8 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 			}
 
 			private void startLoader() {
-				if (loader == null) {
+				
+				if(loader==null){
 					loader = getSupportLoaderManager().initLoader(LOADER_ID, null, loaderCallBackListener);
 					loader.forceLoad();
 				} else {
@@ -93,5 +94,19 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 	@Override
 	public void onLoaderReset(Loader<String> arg0) {
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loader = null;
+		if(progressBarIsVisible){
+			removeFragment();
+		}
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		loaderWorks = false;
+	}
 }
