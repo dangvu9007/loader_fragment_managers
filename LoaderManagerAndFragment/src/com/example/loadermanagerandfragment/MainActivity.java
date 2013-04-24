@@ -1,5 +1,6 @@
 package com.example.loadermanagerandfragment;
 
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -18,8 +19,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 	private Loader<String> loader;
 	private LoaderCallbacks<String> loaderCallBackListener;
 	private Handler handler;
-	private ProgressBarShowable progressListener;
-	private boolean loaderWorks = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 		setContentView(R.layout.activity_main);
 
 		loaderCallBackListener = this;
-		progressListener = this;
 		fragment = new ProgressFragment();
 
 		btn = (Button) findViewById(R.id.button1);
@@ -36,9 +34,8 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 
 			@Override
 			public void onClick(View v) {
-				if (!loaderWorks) {
-					startLoader();
-				}
+				startLoader();
+				btn.setEnabled(false);
 			}
 
 			private void startLoader() {
@@ -81,14 +78,14 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 		DataLoader dataLoader = new DataLoader(this);
 		dataLoader.setHandler(handler);
 		dataLoader.setProgressBarShowable(this);
-		loaderWorks = true;
 		return dataLoader;
 	}
 
+	
 	@Override
 	public void onLoadFinished(Loader<String> loader, String arg1) {
-		loaderWorks = false;
 		removeFragment();
+		btn.setEnabled(true);
 	}
 
 	@Override
@@ -98,7 +95,7 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 	@Override
 	protected void onResume() {
 		super.onResume();
-		loader = null;
+		loader = null; //if you don`t set null value then callback onLoadFinished would not be called. 
 		if(progressBarIsVisible){
 			removeFragment();
 		}
@@ -106,7 +103,9 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 
 	@Override
 	protected void onPause() {
+		removeFragment();
+		btn.setEnabled(true);
 		super.onPause();
-		loaderWorks = false;
 	}
+	
 }
