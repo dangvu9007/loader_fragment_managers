@@ -2,6 +2,7 @@ package com.example.loadermanagerandfragment;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.OperationCanceledException;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
@@ -10,8 +11,6 @@ public class DataLoader extends AsyncTaskLoader<String> {
 	ProgressBarShowable progressBarShowable;
 	private int percentage = 0;
 	private Handler handler;
-	private boolean stop = false;
-	
 
 	public void setProgressBarShowable(ProgressBarShowable progressBarShowable) {
 		this.progressBarShowable = progressBarShowable;
@@ -33,20 +32,12 @@ public class DataLoader extends AsyncTaskLoader<String> {
 		try {
 			Thread.sleep(50);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
-	protected void onStartLoading() {
-		Log.d("onStartLoading","onStartLoading");
-		stop = false;
-	}
-
-	@Override
 	public String loadInBackground() {
-		Log.d("loadInBackground","loadInBackground");
 		process();
 		return null;
 	}
@@ -56,23 +47,12 @@ public class DataLoader extends AsyncTaskLoader<String> {
 			percentage = i;
 			handler.sendEmptyMessage(percentage);
 			pause();
-			if (stop) {
-				return;
-			}
 		}
 	}
 	
 	@Override
-	public void onCanceled(String data) {
-		Log.d("onCanceled","onCanceled");
-		//stop.set(true);
-	}
-	
-	@Override
 	protected void onStopLoading() {
-		Log.d("onStopLoading","onStopLoading");
 		cancelLoad();
-		stop = true;
 	}
 
 }

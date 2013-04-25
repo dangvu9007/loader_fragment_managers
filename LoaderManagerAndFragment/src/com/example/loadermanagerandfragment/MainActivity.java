@@ -95,7 +95,7 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 	@Override
 	protected void onResume() {
 		super.onResume();
-		loader = null; //if you don`t set null value then callback onLoadFinished would not be called. 
+		loader = null; 
 		if(fragment.isAdded()){
 			removeFragment();
 		}
