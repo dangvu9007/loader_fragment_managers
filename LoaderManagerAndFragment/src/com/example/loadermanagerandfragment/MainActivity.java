@@ -17,7 +17,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 	private static final int LOADER_ID = 1;
 	private Button btn;
 	private ProgressFragment fragment;
-//	boolean progressBarIsVisible = false;
 	private Loader<String> loader;
 	private LoaderCallbacks<String> loaderCallBackListener;
 	private Handler handler;
@@ -36,6 +35,7 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 
 			@Override
 			public void onClick(View v) {
+				addFragment();
 				startLoader();
 				btn.setEnabled(false);
 			}
@@ -65,14 +65,12 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<St
 
 		ft.addToBackStack(null);
 		fragment.show(ft, "dialogTag");
-//		progressBarIsVisible = true;
 	}
 
 	public void removeFragment() {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.remove(fragment);
 		ft.commitAllowingStateLoss();
-//		progressBarIsVisible = false;
 	}
 
 	@Override

@@ -1,12 +1,9 @@
 package com.example.loadermanagerandfragment;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import android.R.bool;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
 
 public class DataLoader extends AsyncTaskLoader<String> {
 	private static final int SERVICE_AMOUNT = 1;
@@ -34,16 +31,22 @@ public class DataLoader extends AsyncTaskLoader<String> {
 
 	private void pause() {
 		try {
-			Thread.sleep(500);
+			Thread.sleep(50);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	protected void onStartLoading() {
+		Log.d("onStartLoading","onStartLoading");
+		stop = false;
+	}
 
 	@Override
 	public String loadInBackground() {
-		progressBarShowable.addFragment();
+		Log.d("loadInBackground","loadInBackground");
 		process();
 		return null;
 	}
@@ -61,11 +64,13 @@ public class DataLoader extends AsyncTaskLoader<String> {
 	
 	@Override
 	public void onCanceled(String data) {
+		Log.d("onCanceled","onCanceled");
 		//stop.set(true);
 	}
 	
 	@Override
 	protected void onStopLoading() {
+		Log.d("onStopLoading","onStopLoading");
 		cancelLoad();
 		stop = true;
 	}
