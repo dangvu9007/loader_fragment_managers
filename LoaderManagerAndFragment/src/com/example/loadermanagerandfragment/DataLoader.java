@@ -1,7 +1,9 @@
 package com.example.loadermanagerandfragment;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.R.bool;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
@@ -12,7 +14,7 @@ public class DataLoader extends AsyncTaskLoader<String> {
 	private int percentage = 0;
 	private Handler handler;
 	private boolean stop = false;
-	private final CountDownLatch latch = new CountDownLatch(SERVICE_AMOUNT);
+	
 
 	public void setProgressBarShowable(ProgressBarShowable progressBarShowable) {
 		this.progressBarShowable = progressBarShowable;
@@ -32,7 +34,7 @@ public class DataLoader extends AsyncTaskLoader<String> {
 
 	private void pause() {
 		try {
-			Thread.sleep(50);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,44 +44,30 @@ public class DataLoader extends AsyncTaskLoader<String> {
 	@Override
 	public String loadInBackground() {
 		progressBarShowable.addFragment();
-		new Thread(new BackGroundProcess()).start();
-		waitUntilDone();
-		stop = false;
+		process();
 		return null;
 	}
 
-	private void waitUntilDone() {
-		try {
-			latch.await(); // main thread is waiting on CountDownLatch to finish
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
-	@Override
-	protected void onStopLoading() {
-		stop = true;
-		waitUntilDone();
-	}
-
-	class BackGroundProcess implements Runnable {
-		@Override
-		public void run() {
-			process();
-			latch.countDown();
-		}
-
-		private void process() {
-			for (int i = 0; i < 100; i++) {
-				percentage = i;
-				handler.sendEmptyMessage(percentage);
-				pause();
-				if (stop) {
-					return;
-				}
+	private void process() {
+		for (int i = 0; i < 100; i++) {
+			percentage = i;
+			handler.sendEmptyMessage(percentage);
+			pause();
+			if (stop) {
+				return;
 			}
 		}
-
+	}
+	
+	@Override
+	public void onCanceled(String data) {
+		//stop.set(true);
+	}
+	
+	@Override
+	protected void onStopLoading() {
+		cancelLoad();
+		stop = true;
 	}
 
 }

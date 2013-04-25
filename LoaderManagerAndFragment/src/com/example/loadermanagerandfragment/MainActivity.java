@@ -1,5 +1,7 @@
 package com.example.loadermanagerandfragment;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.os.Handler;
